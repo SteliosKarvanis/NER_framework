@@ -1,6 +1,6 @@
 import random
 
-from configs import DATA_DIR, DROPOUT_RATE, LABELS, MODEL_NAME, MODEL_OUTPUT_DIR, TRAIN_ITER
+from configs import TRAIN_DATA_DIR, DROPOUT_RATE, LABELS, MODEL_NAME, MODEL_OUTPUT_DIR, TRAIN_ITER
 from utils import generate_train_examples, load_data, load_model
 
 ######################################################
@@ -9,7 +9,7 @@ from utils import generate_train_examples, load_data, load_model
 
 if __name__ == "__main__":
     model = load_model(model_name=MODEL_NAME, labels=LABELS)
-    data = load_data(DATA_DIR)
+    data = load_data(TRAIN_DATA_DIR)
     examples = generate_train_examples(model, data)
 
     other_pipes = [pipe for pipe in model.pipe_names if pipe != "ner"]
