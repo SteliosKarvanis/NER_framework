@@ -1,11 +1,13 @@
-import sys
 import argparse
+import os
+import sys
 from functools import partial
 from typing import List
 
 from PyQt5.QtCore import Qt
 from PyQt5.QtGui import QKeySequence
-from PyQt5.QtWidgets import QAction, QApplication, QHBoxLayout, QLabel, QMainWindow, QPushButton, QVBoxLayout, QWidget
+from PyQt5.QtWidgets import (QAction, QApplication, QHBoxLayout, QLabel,
+                             QMainWindow, QPushButton, QVBoxLayout, QWidget)
 
 from configs import LABELS
 
@@ -34,6 +36,7 @@ class NERLabelingApp(QMainWindow):
 
         # Data
         self.output_file_data = output_file_data
+        os.makedirs(os.path.dirname(output_file_data), exist_ok=True)
         self.data_list = self._read_data(
             input_file_data
         )  # List[Dict], a list of the data to be labeled, in format {"name": str, "tags": List[List]}
