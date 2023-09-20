@@ -6,8 +6,7 @@ from typing import List
 
 from PyQt5.QtCore import Qt
 from PyQt5.QtGui import QKeySequence
-from PyQt5.QtWidgets import (QAction, QApplication, QHBoxLayout, QLabel,
-                             QMainWindow, QPushButton, QVBoxLayout, QWidget)
+from PyQt5.QtWidgets import QAction, QApplication, QHBoxLayout, QLabel, QMainWindow, QPushButton, QVBoxLayout, QWidget
 
 from configs import LABELS
 
