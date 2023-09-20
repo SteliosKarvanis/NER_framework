@@ -32,7 +32,10 @@ class NERLabelingApp(QMainWindow):
         tags: a tuple containing the tag name, and the start and end index of the tag name on text
         """
         super().__init__()
-
+        try:
+            assert len(LABELS) > 0
+        except:
+            raise Exception("No labels found in configs.py")
         # Data
         self.output_file_data = output_file_data
         os.makedirs(os.path.dirname(output_file_data), exist_ok=True)
