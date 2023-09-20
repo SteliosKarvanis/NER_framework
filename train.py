@@ -22,3 +22,4 @@ if __name__ == "__main__":
             print(losses)
 
     model.to_disk(MODEL_OUTPUT_DIR)
+    print(f"Model saved to {MODEL_OUTPUT_DIR}")

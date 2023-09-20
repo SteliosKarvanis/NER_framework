@@ -7,7 +7,11 @@ from spacy.training.example import Example
 
 def load_model(model_name: str, labels: List[str]) -> spacy.Language:
     """Load a model and add custom labels to the NER pipeline"""
-    nlp = spacy.load(model_name)
+    try:
+        nlp = spacy.load(model_name)
+    except:
+        spacy.cli.download(model_name)
+        nlp = spacy.load(model_name)
 
     # Set up the pipeline
     if "ner" not in nlp.pipe_names:
