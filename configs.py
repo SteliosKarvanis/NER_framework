@@ -1,6 +1,6 @@
 LABELS = []
 
-# Train configs 
+# Train configs
 TRAIN_DATA_DIR = "data"
 MODEL_NAME = "pt_core_news_lg"
 TRAIN_ITER = 200

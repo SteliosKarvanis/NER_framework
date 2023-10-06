@@ -10,6 +10,9 @@ from PyQt5.QtWidgets import QAction, QApplication, QHBoxLayout, QLabel, QMainWin
 
 from configs import LABELS
 
+TAGS_KEY = "tags"
+TEXT_KEY = "name"
+
 
 def generate_tokens(name: str) -> List:
     """Generate tokens from a given name
@@ -41,7 +44,7 @@ class NERLabelingApp(QMainWindow):
         os.makedirs(os.path.dirname(output_file_data), exist_ok=True)
         self.data_list = self._read_data(
             input_file_data
-        )  # List[Dict], a list of the data to be labeled, in format {"name": str, "tags": List[List]}
+        )  # List[Dict], a list of the data to be labeled, in format {TEXT_KEY: str, TAGS_KEY: List[List]}
         self.selected_tags = []  # List[List], a list of tags selected by the user
         self.current_text_index = 0
         self.current_token_index = 0
@@ -82,7 +85,7 @@ class NERLabelingApp(QMainWindow):
 
     def _update_text(self):
         """Update the text view"""
-        text = self.data_list[self.current_text_index].get("name")
+        text = self.data_list[self.current_text_index].get(TEXT_KEY)
         self.current_token_index = 0
         self.text_view.setText(text)
         self.current_tokens = generate_tokens(text)
@@ -96,7 +99,7 @@ class NERLabelingApp(QMainWindow):
     def _update_labels(self):
         """Update the labels view"""
         text = ""
-        saved_tags = self.data_list[self.current_text_index]["tags"]
+        saved_tags = self.data_list[self.current_text_index][TAGS_KEY]
         for tag in saved_tags + self.selected_tags:
             tag_name, start, end = tag
             token = self.text_view.text()[start:end]
@@ -105,13 +108,13 @@ class NERLabelingApp(QMainWindow):
 
     def save_data_action(self):
         """Save the data to the file"""
-        self.data_list[self.current_text_index]["tags"] += self.selected_tags
+        self.data_list[self.current_text_index][TAGS_KEY] += self.selected_tags
         self.selected_tags = []
         self._save_to_file(self.output_file_data)
 
     def clear_action(self):
         """Clear the data to the current text"""
-        self.data_list[self.current_text_index]["tags"] = []
+        self.data_list[self.current_text_index][TAGS_KEY] = []
         self.reset_all()
 
     def previous_text_action(self):
@@ -148,7 +151,7 @@ class NERLabelingApp(QMainWindow):
 
         updated = False
         label = LABELS[id]
-        saved_tags = self.data_list[self.current_text_index]["tags"]
+        saved_tags = self.data_list[self.current_text_index][TAGS_KEY]
 
         # Check if the token is already labeled and update it
         for tag in self.selected_tags + saved_tags:
@@ -200,7 +203,7 @@ class NERLabelingApp(QMainWindow):
         with open(file_data, "r") as f:
             # -1 to remove the \n
             names = [name[:-1] for name in f.readlines()]
-        data = [{"name": name, "tags": []} for name in names]
+        data = [{TEXT_KEY: name, TAGS_KEY: []} for name in names]
         return data
 
     def print_shortkeys(self):
