@@ -41,7 +41,8 @@ class NERLabelingApp(QMainWindow):
             raise Exception("No labels found in configs.py")
         # Data
         self.output_file_data = output_file_data
-        os.makedirs(os.path.dirname(output_file_data), exist_ok=True)
+        if os.path.dirname(output_file_data):
+            os.makedirs(os.path.dirname(output_file_data), exist_ok=True)
         self.data_list = self._read_data(
             input_file_data
         )  # List[Dict], a list of the data to be labeled, in format {TEXT_KEY: str, TAGS_KEY: List[List]}
@@ -200,10 +201,26 @@ class NERLabelingApp(QMainWindow):
         Returns:
             List, a list of the data
         """
+        # Read input data
         with open(file_data, "r") as f:
-            # -1 to remove the \n
-            names = [name[:-1] for name in f.readlines()]
+            names = [name.replace("\n", "") for name in f.readlines()]
         data = [{TEXT_KEY: name, TAGS_KEY: []} for name in names]
+
+        if not os.path.exists(self.output_file_data):
+            return data
+
+        # Read the already labelled data from output file
+        with open(self.output_file_data, "r+") as f:
+            output_file_data = eval(f.read())
+
+        # Update the input data with the output data
+        for elem in data:
+            name = elem[TEXT_KEY]
+            for output_elem in output_file_data:
+                output_name = output_elem[TEXT_KEY]
+                if name == output_name:
+                    elem[TAGS_KEY] = output_elem[TAGS_KEY]
+                    break
         return data
 
     def print_shortkeys(self):
