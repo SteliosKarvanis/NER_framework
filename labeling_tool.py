@@ -39,10 +39,11 @@ class NERLabelingApp(QMainWindow):
             assert len(LABELS) > 0
         except:
             raise Exception("No labels found in configs.py")
-        # Data
-        self.output_file_data = output_file_data
         if os.path.dirname(output_file_data):
             os.makedirs(os.path.dirname(output_file_data), exist_ok=True)
+
+        # Data
+        self.output_file_data = output_file_data
         self.data_list = self._read_data(
             input_file_data
         )  # List[Dict], a list of the data to be labeled, in format {TEXT_KEY: str, TAGS_KEY: List[List]}
