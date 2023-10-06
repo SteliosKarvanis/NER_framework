@@ -48,10 +48,10 @@ class NERLabelingApp(QMainWindow):
             input_file_data
         )  # List[Dict], a list of the data to be labeled, in format {TEXT_KEY: str, TAGS_KEY: List[List]}
         self.selected_tags = []  # List[List], a list of tags selected by the user
-        self.current_text_index = 0
-        self.current_token_index = 0
-        self.current_button_index = 0
-        self.current_tokens = None
+        self.current_text_index = 0  # Index of the current text in the data_list
+        self.current_token_index = 0  # Index of the current token (word)
+        self.current_button_index = 0  # Index of the current button selected (KeyBoard usage)
+        self.current_tokens = None  # List[str], a list of tokens from the current text
 
         # Widgtes
         self.text_view = None  # QTextEdit: the widget containing the current text
