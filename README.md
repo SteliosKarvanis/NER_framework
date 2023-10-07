@@ -12,7 +12,7 @@ pip install -r requirements.txt
 ## Usage
 
 ### Configs
-Set up the labels in the file `labels.py`, should have a 'O' label for label as empty, and for each entity X, create labels `B-X` and `I-X`, for label as begin and inside label respectively, for multi words entities. 
+Set up the labels in the file `labels.py`, should have a `O` label for label as empty, and for each entity X, create labels `B-X` and `I-X`, for label as begin and inside label respectively, for multi words entities. 
 
 ### Data Labeling
 To label the data, create a text file with the sentences to be labeled with one sentence by line, then label it with the `labeling tool`, by running the following command:
