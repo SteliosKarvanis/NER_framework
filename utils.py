@@ -62,7 +62,8 @@ def check_data(data: List):
         except:
             errors_in_data = True
             print(f"Not all tags labelled on: {name}")
-
+    if errors_in_data:
+        raise ValueError("Errors in data")
 
 def load_data(data_folder: str) -> List[Dict[str, List]]:
     """Load data from a folder containing json files"""
@@ -74,30 +75,7 @@ def load_data(data_folder: str) -> List[Dict[str, List]]:
             json_str = file.read()
         data.extend(eval(json_str))
     check_data(data)
-    data = parse_data(data)
     return data
-
-
-def parse_data(data: List) -> List[Dict[str, List]]:
-    """Parse the data into the correct format"""
-    for elem in data:
-        tags = elem[TAGS_KEY]
-        for idx in range(len(tags)):
-            if tags[idx][0].startswith("I-"):
-                r_iter = 1
-                while tags[idx - r_iter][0].startswith("I-"):
-                    r_iter += 1
-                tags[idx - r_iter][2] = tags[idx][2]
-        elem[TAGS_KEY] = [x for x in elem[TAGS_KEY] if not x[0].startswith("I-")]
-    check_data(data)
-
-    train_data_parsed = []
-    for elem in data:
-        text = elem[TEXT_KEY]
-        dic = {}
-        dic["entities"] = [(x[1], x[2], x[0]) for x in elem[TAGS_KEY]]
-        train_data_parsed.append((text, dic))
-    return train_data_parsed
 
 
 def generate_train_examples(model: spacy.Language, data: List) -> List[Example]:
