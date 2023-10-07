@@ -1,5 +1,6 @@
 import argparse
 import os
+import re
 import sys
 from functools import partial
 from typing import List
@@ -204,7 +205,12 @@ class NERLabelingApp(QMainWindow):
         """
         # Read input data
         with open(file_data, "r") as f:
-            names = [name.replace("\n", "") for name in f.readlines()]
+            names = []
+            for name in names:
+                name = name.replace("\n", "")
+                name = re.sub(" +", " ", name)
+                if name:
+                    names.append(name)
         data = [{TEXT_KEY: name, TAGS_KEY: []} for name in names]
 
         if not os.path.exists(self.output_file_data):
