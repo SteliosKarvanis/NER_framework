@@ -4,6 +4,9 @@ from typing import Dict, List
 import spacy
 from spacy.training.example import Example
 
+TEXT_KEY = "name"
+TAGS_KEY = "tags"
+
 
 def load_model(model_name: str, labels: List[str]) -> spacy.Language:
     """Load a model and add custom labels to the NER pipeline"""
@@ -27,30 +30,38 @@ def load_model(model_name: str, labels: List[str]) -> spacy.Language:
     return nlp
 
 
-def check_data(data):
-    """Check if the data is in the correct format"""
-    error = False
-    for idx, elem in enumerate(data):
-        tags = elem["tags"]
-        # Check if the first tag starts at 0
-        assert tags[0][1] == 0
+def check_data(data: List):
+    """Check if the data is valid.
+    Check if the start and end index of each tag is correct.
+    Check if the end index of the previous tag is the same as the start index of the next tag.
+    Check if the end index of the last tag is the same as the length of the product.
+    """
+    errors_in_data = False
+    for product in data:
+        name = product[TEXT_KEY]
+        tags = product[TAGS_KEY]
+        # Check if the first tag starts at 0 index
+        if not tags[0][1] == 0:
+            print(f"Start index not 0 on: {name}")
+            errors_in_data = True
+            continue
+
         end = tags[0][2]
         for tag in tags[1:]:
             start = tag[1]
+            # Check if the tags are sequential
             try:
-                # Check if tags are consecutive
                 assert start == end + 1
             except:
-                print(idx)
+                print(f"Tags not sequential on: {name}")
+                errors_in_data = True
+                break
             end = tag[2]
         try:
-            assert end == len(elem["name"])
+            assert end == len(product[TEXT_KEY])
         except:
-            error = True
-            print(end, len(elem["name"]))
-            print(idx)
-    if error:
-        raise Exception("Data in wrong format")
+            errors_in_data = True
+            print(f"Not all tags labelled on: {name}")
 
 
 def load_data(data_folder: str) -> List[Dict[str, List]]:
